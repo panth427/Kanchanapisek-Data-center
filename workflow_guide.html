@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>คู่มือขั้นตอนและ Prompt สำหรับสร้างรายงานวิเคราะห์แผนการศึกษา</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Chonburi&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#12233b; --ink-soft:#3a4a5f;
+    --navy:#173a5e; --navy-deep:#0d2540;
+    --gold:#b8892b; --gold-soft:#e8d9b0; --gold-pale:#f3e9d0;
+    --paper:#fbf9f4; --paper-warm:#f4efe4; --line:#dcd3c0;
+    --pos:#1f6b47; --pos-bg:#e7f2ec;
+    --amber:#a9781a; --amber-bg:#fbf1de;
+    --code-bg:#0f2236; --code-ink:#e6edf5; --code-gold:#e8d9b0;
+    --card:#ffffff;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{font-family:'Sarabun',system-ui,sans-serif;color:var(--ink);background:var(--paper);line-height:1.78;font-size:16px;-webkit-font-smoothing:antialiased;}
+  .wrap{max-width:1000px;margin:0 auto;padding:0 24px;}
+
+  .masthead{background:radial-gradient(120% 140% at 85% -10%, rgba(184,137,43,.24), transparent 55%),linear-gradient(160deg,var(--navy-deep),var(--navy));color:#f7f3e9;padding:60px 0 48px;position:relative;overflow:hidden;border-bottom:3px solid var(--gold);}
+  .masthead::before{content:"";position:absolute;inset:0;background-image:repeating-linear-gradient(90deg,rgba(255,255,255,.04) 0 1px,transparent 1px 64px);pointer-events:none;}
+  .eyebrow{font-size:.82rem;letter-spacing:.26em;text-transform:uppercase;color:var(--gold-soft);font-weight:600;margin-bottom:18px;display:flex;align-items:center;gap:14px;}
+  .eyebrow::before{content:"";height:1px;background:rgba(232,217,176,.4);flex:0 0 34px;}
+  .masthead h1{font-family:'Chonburi',serif;font-weight:400;font-size:2.2rem;line-height:1.34;color:#fff;max-width:24ch;}
+  .masthead .sub{margin-top:18px;font-size:1.05rem;color:#cdd9e6;max-width:70ch;font-weight:300;}
+
+  /* overview principles */
+  section{padding:46px 0;border-top:1px solid var(--line);}
+  section:first-of-type{border-top:none;}
+  .sec-head{display:flex;align-items:baseline;gap:16px;margin-bottom:8px;}
+  .sec-num{font-family:'Chonburi',serif;color:var(--gold);font-size:1.5rem;line-height:1;flex:0 0 auto;}
+  .sec-head h2{font-size:1.5rem;color:var(--navy-deep);font-weight:700;line-height:1.35;}
+  .sec-rule{height:2px;background:linear-gradient(90deg,var(--gold),transparent);margin:14px 0 24px;}
+  .lead{font-size:1.05rem;color:var(--ink-soft);max-width:80ch;margin-bottom:18px;}
+  p.body{max-width:82ch;margin-bottom:14px;color:var(--ink-soft);}
+
+  .princ{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:8px;}
+  .p-item{background:var(--card);border:1px solid var(--line);border-top:3px solid var(--gold);border-radius:10px;padding:16px 18px;}
+  .p-item h4{color:var(--navy-deep);font-size:1rem;font-weight:700;margin-bottom:4px;display:flex;gap:8px;align-items:center;}
+  .p-item h4 .n{font-family:'Chonburi',serif;color:var(--gold);}
+  .p-item p{font-size:.93rem;color:var(--ink-soft);}
+
+  /* flow overview */
+  .flow{display:flex;flex-wrap:wrap;align-items:stretch;gap:0;margin-top:8px;}
+  .flow .node{flex:1 1 0;min-width:130px;background:var(--card);border:1px solid var(--line);border-top:3px solid var(--navy);border-radius:10px;padding:14px 16px;}
+  .flow .node .num{font-family:'Chonburi',serif;color:var(--gold);font-size:1.1rem;}
+  .flow .node h4{font-size:.95rem;color:var(--navy-deep);font-weight:600;margin:2px 0 4px;}
+  .flow .node p{font-size:.86rem;color:var(--ink-soft);line-height:1.5;}
+  .flow .arrow{flex:0 0 auto;display:grid;place-items:center;color:var(--gold);font-size:1.3rem;padding:0 5px;}
+  @media(max-width:820px){.flow .arrow{transform:rotate(90deg);width:100%;padding:3px 0;}}
+
+  /* step blocks */
+  .step-block{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:0;margin-bottom:20px;overflow:hidden;}
+  .step-head{background:var(--paper-warm);padding:16px 22px;display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--line);}
+  .step-head .badge{width:38px;height:38px;border-radius:9px;background:var(--navy-deep);color:var(--gold-soft);font-family:'Chonburi',serif;font-size:1.15rem;display:grid;place-items:center;flex:0 0 auto;}
+  .step-head h3{color:var(--navy-deep);font-size:1.12rem;font-weight:700;line-height:1.3;}
+  .step-head .tag{font-size:.8rem;color:var(--ink-soft);font-weight:600;}
+  .step-body{padding:18px 22px;}
+  .step-body .what{font-size:.95rem;color:var(--ink-soft);margin-bottom:14px;}
+  .step-body .what b{color:var(--navy-deep);}
+  .goal{display:inline-block;font-size:.82rem;font-weight:700;color:var(--pos);background:var(--pos-bg);padding:3px 12px;border-radius:20px;margin-bottom:12px;}
+
+  /* prompt box */
+  .prompt-label{font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--gold);font-weight:700;margin:4px 0 6px;display:flex;align-items:center;gap:8px;}
+  .prompt{background:var(--code-bg);color:var(--code-ink);border-radius:10px;padding:16px 18px;font-size:.92rem;line-height:1.7;position:relative;border:1px solid rgba(232,217,176,.18);}
+  .prompt .q{color:var(--code-gold);font-style:italic;}
+  .prompt code{color:#ffd98a;background:rgba(255,255,255,.06);padding:1px 6px;border-radius:4px;font-family:inherit;}
+  .tip{margin-top:12px;font-size:.9rem;color:var(--ink-soft);background:var(--amber-bg);border-left:3px solid var(--gold);padding:10px 14px;border-radius:0 8px 8px 0;}
+  .tip b{color:var(--amber);}
+
+  /* reusable master prompt */
+  .master{background:var(--code-bg);color:var(--code-ink);border-radius:12px;padding:22px 24px;font-size:.93rem;line-height:1.8;border:1px solid rgba(232,217,176,.2);}
+  .master .h{color:var(--code-gold);font-weight:700;display:block;margin-bottom:8px;}
+  .master code{color:#ffd98a;background:rgba(255,255,255,.06);padding:1px 6px;border-radius:4px;font-family:inherit;}
+
+  .checklist{list-style:none;margin-top:8px;}
+  .checklist li{padding-left:30px;position:relative;margin-bottom:10px;color:var(--ink-soft);font-size:.97rem;}
+  .checklist li::before{content:"✓";position:absolute;left:0;top:0;width:20px;height:20px;background:var(--pos);color:#fff;border-radius:5px;display:grid;place-items:center;font-size:.8rem;font-weight:700;}
+
+  .closing{background:linear-gradient(160deg,var(--navy-deep),var(--navy));color:#eef2f7;border-radius:14px;padding:34px 38px;margin-top:10px;border-top:3px solid var(--gold);}
+  .closing h3{font-family:'Chonburi',serif;font-weight:400;color:#fff;font-size:1.28rem;margin-bottom:14px;}
+  .closing p{color:#cdd9e6;max-width:82ch;margin-bottom:12px;font-weight:300;}
+  .closing b{color:#fff;}
+
+  footer{padding:32px 0 46px;text-align:center;color:var(--ink-soft);font-size:.86rem;}
+  footer .div{width:60px;height:2px;background:var(--gold);margin:0 auto 18px;}
+
+  @media (max-width:820px){.masthead h1{font-size:1.65rem;}.princ{grid-template-columns:1fr;}section{padding:36px 0;}}
+  @media print{body{background:#fff;}.masthead,.closing,.prompt,.master{-webkit-print-color-adjust:exact;print-color-adjust:exact;}.step-block{page-break-inside:avoid;}}
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="wrap">
+    <div class="eyebrow"><span>คู่มือการทำงาน · สำหรับส่งต่อทีม</span></div>
+    <h1>ขั้นตอนและ Prompt สำหรับสร้างรายงานวิเคราะห์แผนการศึกษา</h1>
+    <p class="sub">ถอดกระบวนการที่ใช้จริงในการวิเคราะห์แผนพัฒนาฯ แผนปฏิบัติการ และการสังเคราะห์นโยบาย ให้ออกมาเป็นรายงาน HTML สำหรับผู้บริหาร — นำไปใช้ซ้ำกับงานลักษณะเดียวกันได้</p>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- OVERVIEW -->
+  <section id="overview">
+    <div class="sec-head"><span class="sec-num">๐</span><h2>ภาพรวมกระบวนการ 4 ขั้น</h2></div>
+    <div class="sec-rule"></div>
+    <p class="lead">ทุกงานวิเคราะห์เอกสารในชุดนี้เดินตามลำดับเดียวกัน ไม่ว่าจะเป็นการวิเคราะห์แผนเล่มเดียว การเทียบความสอดคล้องสองเล่ม หรือการสังเคราะห์นโยบายหลายแหล่ง</p>
+    <div class="flow">
+      <div class="node"><div class="num">๑</div><h4>ป้อนเอกสาร + โจทย์</h4><p>อัปโหลด PDF และบอกให้ชัดว่าต้องการวิเคราะห์อะไร</p></div>
+      <div class="arrow">→</div>
+      <div class="node"><div class="num">๒</div><h4>อ่าน + สกัดสาระ</h4><p>ให้ AI อ่านทั้งเล่ม ดึงโครงสร้าง SWOT กลยุทธ์ ตัวชี้วัด งบ</p></div>
+      <div class="arrow">→</div>
+      <div class="node"><div class="num">๓</div><h4>วิเคราะห์เชิงลึก</h4><p>จุดเด่น–จุดที่ควรพัฒนา ความสอดคล้อง ข้อเสนอเชิงสร้างสรรค์</p></div>
+      <div class="arrow">→</div>
+      <div class="node"><div class="num">๔</div><h4>ผลิตรายงาน HTML</h4><p>จัดรูปแบบสำหรับผู้บริหาร พร้อมพิมพ์เป็น PDF</p></div>
+    </div>
+  </section>
+
+  <!-- PRINCIPLES -->
+  <section id="principles">
+    <div class="sec-head"><span class="sec-num">๑</span><h2>หลักการเขียน Prompt ที่ทำให้ได้ผลดี</h2></div>
+    <div class="sec-rule"></div>
+    <div class="princ">
+      <div class="p-item"><h4><span class="n">๑</span> ระบุบทบาทและบริบท</h4><p>บอกว่าเรากำลังทำงานในฐานะอะไร (เช่น หัวหน้าฝ่ายวิชาการ) และเอกสารเป็นของหน่วยงานใด AI จะปรับมุมมองให้ตรง</p></div>
+      <div class="p-item"><h4><span class="n">๒</span> แยกงานเป็นขั้น</h4><p>อย่าสั่งทุกอย่างในประโยคเดียว ให้วิเคราะห์ก่อน แล้วค่อยสั่งทำไฟล์ ทำให้ตรวจสอบระหว่างทางได้</p></div>
+      <div class="p-item"><h4><span class="n">๓</span> ขอทั้งวิจารณ์และข้อเสนอ</h4><p>ไม่ใช่แค่ “บอกว่าดีหรือไม่ดี” แต่ขอ “ทางแก้” ด้วย เช่น ขอ TOWS หรือตัวชี้วัดที่ปรับแล้ว</p></div>
+      <div class="p-item"><h4><span class="n">๔</span> กำหนดผู้อ่านและรูปแบบ</h4><p>บอกว่าใครจะอ่าน (ผู้บริหาร) และอยากได้รูปแบบไหน (ไฟล์ HTML พร้อมพิมพ์) ผลลัพธ์จะตรงการใช้งาน</p></div>
+      <div class="p-item"><h4><span class="n">๕</span> ให้ค้นข้อมูลล่าสุดเมื่อจำเป็น</h4><p>เรื่องนโยบายที่เปลี่ยนบ่อย สั่งให้ค้นเว็บฉบับล่าสุดเสมอ อย่าพึ่งความรู้เดิม</p></div>
+      <div class="p-item"><h4><span class="n">๖</span> ต่อยอดจากงานก่อนหน้า</h4><p>อ้างถึง “รายงานก่อนหน้า” ได้เลย AI จะรักษาธีมและความต่อเนื่องของเอกสารทั้งชุด</p></div>
+    </div>
+  </section>
+
+  <!-- STEP 1 -->
+  <section id="step1">
+    <div class="sec-head"><span class="sec-num">๒</span><h2>ขั้นตอนที่ใช้จริง พร้อม Prompt แต่ละช่วง</h2></div>
+    <div class="sec-rule"></div>
+
+    <div class="step-block">
+      <div class="step-head"><div class="badge">๑</div><div><h3>วิเคราะห์แผนเล่มเดียว (จุดเด่น–จุดที่ควรพัฒนา)</h3><div class="tag">ใช้กับ: แผนพัฒนาฯ 5 ปี หรือเอกสารแผนใด ๆ</div></div></div>
+      <div class="step-body">
+        <span class="goal">เป้าหมาย: เข้าใจเล่ม + ได้บทวิเคราะห์เชิงลึก</span>
+        <div class="what"><b>ทำอะไร:</b> อัปโหลดไฟล์ PDF แล้วสั่งให้อ่านและวิเคราะห์ ให้ระบุตัวเราเองและหน่วยงานเจ้าของเอกสารเพื่อให้มุมมองตรง</div>
+        <div class="prompt-label">◆ Prompt ที่ใช้</div>
+        <div class="prompt"><span class="q">"นี่คือไฟล์แผนพัฒนาคุณภาพการศึกษา ระยะ 5 ปี ของ [ชื่อหน่วยงาน] ช่วยวิเคราะห์จุดเด่นและจุดที่ควรพัฒนาให้หน่อยครับ"</span></div>
+        <div class="tip"><b>เคล็ดลับ:</b> ถ้าตั้ง user preferences หรือบอกไว้ว่าเราเป็น “ครู/หัวหน้าฝ่ายวิชาการ” AI จะเชื่อมข้อเสนอกับบทบาทเราให้อัตโนมัติ เช่น ชี้จุดที่ฝ่ายวิชาการทำต่อได้</div>
+      </div>
+    </div>
+
+    <div class="step-block">
+      <div class="step-head"><div class="badge">๒</div><div><h3>สั่งทำเป็นไฟล์ HTML สำหรับผู้บริหาร + เพิ่มเครื่องมือ</h3><div class="tag">ใช้กับ: แปลงบทวิเคราะห์เป็นเอกสารส่งมอบ</div></div></div>
+      <div class="step-body">
+        <span class="goal">เป้าหมาย: ได้เอกสารพร้อมใช้ ไม่ใช่แค่ข้อความในแชท</span>
+        <div class="what"><b>ทำอะไร:</b> หลังได้บทวิเคราะห์แล้ว สั่งให้รวมเข้ากับเครื่องมือเชิงกลยุทธ์ (เช่น TOWS Matrix, ตัวชี้วัด SMART) และผลิตเป็นไฟล์ HTML</div>
+        <div class="prompt-label">◆ Prompt ที่ใช้</div>
+        <div class="prompt"><span class="q">"ทำ 2 อย่างนี้ [เช่น TOWS Matrix + ตารางตัวชี้วัด SMART] เป็นไฟล์ HTML ผนวกเข้ากับบทวิเคราะห์ก่อนหน้า เป็นบทวิเคราะห์จุดเด่นและจุดที่ควรพัฒนา สำหรับผู้บริหารครับ"</span></div>
+        <div class="tip"><b>เคล็ดลับ:</b> คำว่า <code>สำหรับผู้บริหาร</code> สำคัญมาก มันทำให้ AI จัดหน้าเป็นสรุปกระชับ มีตาราง/แผนภาพ และพิมพ์เป็น PDF ได้ แทนที่จะเป็นข้อความยาว</div>
+      </div>
+    </div>
+
+    <div class="step-block">
+      <div class="step-head"><div class="badge">๓</div><div><h3>เทียบความสอดคล้องระหว่างสองเอกสาร</h3><div class="tag">ใช้กับ: แผนปฏิบัติการปี ปะทะ แผน 5 ปี</div></div></div>
+      <div class="step-body">
+        <span class="goal">เป้าหมาย: หาช่องว่าง/ความไม่ตรงกันระหว่างแผนแม่กับแผนลูก</span>
+        <div class="what"><b>ทำอะไร:</b> อัปโหลดเอกสารเล่มที่สอง แล้วสั่งให้เทียบกับเล่มแรกที่วิเคราะห์ไปแล้ว AI จะจำบริบทเดิมได้</div>
+        <div class="prompt-label">◆ Prompt ที่ใช้</div>
+        <div class="prompt"><span class="q">"นี่คือไฟล์ร่างแผนปฏิบัติการปี [25xx] วิเคราะห์ความสอดคล้องกับแผนพัฒนาฯ [5 ปี] และวิเคราะห์จุดเด่น จุดที่ควรพัฒนา สร้างไฟล์ HTML สำหรับผู้บริหาร"</span></div>
+        <div class="tip"><b>เคล็ดลับ:</b> การเทียบสองเล่มมักเจอประเด็นที่มองข้าม เช่น จำนวนกลยุทธ์ไม่ตรงกัน หรืองบกระจุกบางพันธกิจ ลองถามเจาะเพิ่มว่า <code>"งบแต่ละแผนงานสมดุลไหม"</code></div>
+      </div>
+    </div>
+
+    <div class="step-block">
+      <div class="step-head"><div class="badge">๔</div><div><h3>สังเคราะห์นโยบายหลายแหล่ง + ค้นข้อมูลล่าสุด</h3><div class="tag">ใช้กับ: เตรียมข้อมูลก่อนร่างแผนรอบใหม่</div></div></div>
+      <div class="step-body">
+        <span class="goal">เป้าหมาย: รวบรวมนโยบายฉบับล่าสุดหลายชั้นเป็นรายงานเดียว</span>
+        <div class="what"><b>ทำอะไร:</b> สั่งให้ค้นเว็บหานโยบายฉบับปัจจุบัน (ที่อาจเปลี่ยนไปแล้ว) แล้วสังเคราะห์เชื่อมโยงเป็นแนวทางสำหรับแผนรอบต่อไป</div>
+        <div class="prompt-label">◆ Prompt ที่ใช้</div>
+        <div class="prompt"><span class="q">"ช่วยค้นคว้า นโยบาย/ยุทธศาสตร์ชาติ 20 ปี, นโยบาย ศธ., นโยบาย สพฐ. และพระบรมราโชบายด้านการศึกษา ร.10 ฉบับล่าสุด รวบรวมและจัดทำรายงานอย่างเป็นระบบ พร้อมแนวทางการนำไปจัดทำแผนพัฒนาฯ ระยะ 5 ปี [รอบถัดไป]"</span></div>
+        <div class="tip"><b>เคล็ดลับ:</b> ระบุคำว่า <code>ฉบับล่าสุด</code> เสมอ เพราะนโยบายการศึกษาเปลี่ยนตามรัฐบาล/รัฐมนตรี การค้นเว็บจะดึงฉบับปัจจุบันมาแทนของเก่า</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MASTER PROMPT -->
+  <section id="master">
+    <div class="sec-head"><span class="sec-num">๓</span><h2>Prompt แม่แบบ (ปรับใช้ได้ทันที)</h2></div>
+    <div class="sec-rule"></div>
+    <p class="lead">คัดลอกแล้วเติมข้อมูลในวงเล็บ ใช้เป็นจุดตั้งต้นสำหรับงานวิเคราะห์เอกสารแผนใด ๆ</p>
+    <div class="master">
+      <span class="h">▸ แม่แบบสำหรับวิเคราะห์เอกสารแผน</span>
+      "ฉันเป็น <code>[บทบาท เช่น หัวหน้าฝ่ายวิชาการ]</code> ของ <code>[หน่วยงาน]</code><br>
+      นี่คือไฟล์ <code>[ชื่อเอกสาร]</code> ช่วย:<br>
+      1) อ่านและสรุปโครงสร้างหลักของเอกสาร<br>
+      2) วิเคราะห์จุดเด่นและจุดที่ควรพัฒนา โดยดูทั้งการเชื่อมโยงนโยบาย คุณภาพตัวชี้วัด ความสอดคล้องของงบประมาณ และกลไกติดตาม<br>
+      3) เสนอทางแก้ที่เป็นรูปธรรม เช่น <code>[TOWS / ตัวชี้วัด SMART / ตารางติดตาม]</code><br>
+      แล้วจัดทำเป็น <code>ไฟล์ HTML สำหรับผู้บริหาร</code> ที่พิมพ์เป็น PDF ได้"
+    </div>
+  </section>
+
+  <!-- QUALITY CHECKLIST -->
+  <section id="checklist">
+    <div class="sec-head"><span class="sec-num">๔</span><h2>เช็กลิสต์ก่อนนำรายงานไปใช้จริง</h2></div>
+    <div class="sec-rule"></div>
+    <ul class="checklist">
+      <li><b>ตัวเลข/ข้อเท็จจริง:</b> ตรวจว่าตัวเลขงบประมาณ ปี พ.ศ. และชื่อบุคคล/ตำแหน่งถูกต้องตรงกับเอกสารต้นฉบับ (AI อาจใส่ค่าประมาณเชิงหลักการไว้ ต้องแทนด้วยค่าจริง)</li>
+      <li><b>นโยบายล่าสุด:</b> ยืนยันว่านโยบายที่อ้างเป็นฉบับปัจจุบัน โดยเช็กจากเว็บทางการ (moe.go.th, สพฐ.) อีกครั้ง</li>
+      <li><b>บริบทเฉพาะหน่วยงาน:</b> ปรับข้อเสนอให้เข้ากับบริบทจริงของโรงเรียน/กลุ่มโรงเรียน ไม่ใช้ค่าตัวอย่างตรง ๆ</li>
+      <li><b>พิสูจน์อักษร:</b> ตรวจการสะกดและความถูกต้องก่อนเสนอ เพราะเป็นเอกสารทางราชการ</li>
+      <li><b>ผ่านความเห็นชอบ:</b> เสนอคณะกรรมการสถานศึกษา/กลุ่มโรงเรียนก่อนประกาศใช้</li>
+    </ul>
+  </section>
+
+  <section id="closing" style="border-top:none;padding-bottom:20px">
+    <div class="closing">
+      <h3>หัวใจของการทำงานแบบนี้</h3>
+      <p><b>แยกงานเป็นขั้น + ระบุบทบาทและผู้อ่าน + ขอทั้งวิจารณ์และทางแก้ + ให้ค้นข้อมูลล่าสุด</b> สี่อย่างนี้คือสิ่งที่ทำให้รายงานทั้งชุดออกมาใช้งานได้จริง ไม่ใช่แค่ข้อความทั่วไป</p>
+      <p>เริ่มจากการวิเคราะห์ทีละเล่ม แล้วต่อยอดเป็นการเทียบความสอดคล้องและการสังเคราะห์นโยบาย โดยรักษาธีมเอกสารให้เป็นชุดเดียวกัน ทำให้ได้ชุดรายงานที่ผู้บริหารอ่านต่อเนื่องได้ และที่สำคัญ — <b>ตรวจสอบข้อเท็จจริงเสมอ</b> ก่อนนำไปใช้ในงานราชการ</p>
+    </div>
+  </section>
+
+  <footer>
+    <div class="div"></div>
+    คู่มือขั้นตอนและ Prompt สำหรับสร้างรายงานวิเคราะห์แผนการศึกษา · สำหรับส่งต่อทีมงาน
+  </footer>
+
+</div>
+</body>
+</html>
